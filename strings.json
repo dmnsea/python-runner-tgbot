@@ -1,0 +1,26 @@
+{
+  "en": {
+    "en_lang_name": "English",
+    "ru_lang_name": "Russian",
+    "lang_changed": "Language changed!",
+    "py_version_changed": "Python version set to {version}",
+    "welcome": "Welcome {username}! I'm a bot which can run non-interactive Python code for you (no input from user) and provide result with AI comment if it will fail with any exception.",
+    "lang_options": "Available languages:\n{lang_list}\nExample of changing language:\n/set_lang ru",
+    "python_versions": "Listed versions are the most recent in Ubuntu 20.04, 22.04 and 24.04 (3 latest LTS versions)\nAvailable Python versions:\n{version_list}\nExample of changing version:\n/set_python {latest}",
+    "code_exec_result": "Code execution result with Python {version}:\n",
+    "ai_comment": "Comment from AI:",
+    "explain_prompt": "Please explain me error from the STDERR section. Be as coinsize as possible."
+  },
+  "ru": {
+    "en_lang_name": "Английский",
+    "ru_lang_name": "Русский",
+    "lang_changed": "Язык изменен!",
+    "py_version_changed": "Выбран Python версии {version}",
+    "welcome": "Привет {username}! Я бот, который может запускать неинтерактивные python-скрипты (без пользовательского ввода через функцию input), предоставить результат выполнения кода и дать комментарий от ИИ в случае аварийного завершения программы.",
+    "lang_options": "Доступные языки:\n{lang_list}\nПример смены языка:\n/set_lang ru",
+    "python_versions": "Представленные версии Python являются последними доступными в трех последних LTS-выпусках Ubuntu (20.04, 22.04 and 24.04)\nДоступные версии Python:\n{version_list}\nПример переключения версии:\n/set_python {latest}",
+    "code_exec_result": "Результат выполнения кода с помощью Python {version}:\n",
+    "ai_comment": "Комментарий от ИИ:",
+    "explain_prompt": "Пожалуйста объясни в чем причина ошибки из раздела STDERR. Пожалуйста, будь предельно точен."
+  }
+}
