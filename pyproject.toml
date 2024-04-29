@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "python-runner-bot"
+version = "0.1.0"
+package-mode = false
+description = "Telegram bot to run Python code via docker containers"
+authors = ["https://github.com/NEK-RA", "https://github.com/"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+python-dotenv = "1.0.1"
+docker = "^7.0.0"
+aiogram = "^3.5.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
