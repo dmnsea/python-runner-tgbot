@@ -1,17 +1,23 @@
-import asyncio
-import docker_runner
+from executor_queue import ExecutorQueue
+from docker_runner import init
+import time
 
+init()
 
-text = docker_runner.run_python_code(
-"""
+code = """
 from time import sleep
+print('RUN #{n}')
 print('hello world')
-#print([1,2,3].findFirst(4))
-#sleep(15)
-""",
-    print,
-    0,
-    "my_super_code.py"
-)
+sleep({n})
+print('bye')
+"""
 
-print(text)
+ExecutorQueue.init(restore_queue=False)
+
+try:
+    for i in range(15):
+        ExecutorQueue.add_task(code.format(n=i+1), print, 0)
+
+    time.sleep(20)
+except KeyboardInterrupt:
+    ExecutorQueue.shutdown(save_queue=False)

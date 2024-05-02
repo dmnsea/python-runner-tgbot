@@ -6,7 +6,7 @@ import re
 # https://docker-py.readthedocs.io/en/stable/
 import docker
 
-from constants import DOCKER_DEFAULT_IMAGE, DOCKER_CONTAINER_MEMORY_LIMIT_MB, DOCKER_CONTAINER_EXECUTION_TIMEOUT, DOCKER_CONTAINER_STOP_TIMEOUT
+import const
 
 client = docker.from_env()
 
@@ -14,7 +14,7 @@ client = docker.from_env()
 #############################################
 #############################################
 
-def prepare_image(target: str = DOCKER_DEFAULT_IMAGE) -> None:
+def prepare_image(target: str = const.DOCKER_DEFAULT_IMAGE) -> None:
   global client
   f"""Function to prepare necessary docker image for futher work of bot.
 
@@ -33,7 +33,7 @@ def prepare_image(target: str = DOCKER_DEFAULT_IMAGE) -> None:
 #############################################
 #############################################
 
-async def run_container(cmd: str, msg_id:str, filename: str, target: str = DOCKER_DEFAULT_IMAGE) -> str:
+async def run_container(cmd: str, msg_id:str, filename: str, target: str = const.DOCKER_DEFAULT_IMAGE) -> str:
   global client
   """Function to run specified offline container with specified command.
 
@@ -49,11 +49,11 @@ async def run_container(cmd: str, msg_id:str, filename: str, target: str = DOCKE
   - read_only=True - preventing "rm -rf /" and others
   """
   container = client.containers.run(
-      image=DOCKER_DEFAULT_IMAGE,
+      image=const.DOCKER_DEFAULT_IMAGE,
       command=cmd,
       name=f"py-runner-{msg_id}-{time()}",
       detach=True,
-      mem_limit=f"{DOCKER_CONTAINER_MEMORY_LIMIT_MB}m",
+      mem_limit=f"{const.DOCKER_CONTAINER_MEMORY_LIMIT_MB}m",
       network_disabled=True,
       read_only=True
   )
@@ -61,11 +61,11 @@ async def run_container(cmd: str, msg_id:str, filename: str, target: str = DOCKE
   step = 0.1
   execution_timeout = False
   while(container.status != "exited"):
-    if(counter > DOCKER_CONTAINER_EXECUTION_TIMEOUT):
+    if(counter > const.DOCKER_CONTAINER_EXECUTION_TIMEOUT):
       container.reload()
       if container.status == "running":
         execution_timeout = True
-      container.stop(timeout=DOCKER_CONTAINER_STOP_TIMEOUT)
+      container.stop(timeout=const.DOCKER_CONTAINER_STOP_TIMEOUT)
       break
     await asyncio.sleep(step)
     counter += step
@@ -81,7 +81,7 @@ async def run_container(cmd: str, msg_id:str, filename: str, target: str = DOCKE
   if stderr:
     output += "\n\n\nSTDERR:\n" + stderr.replace('File "<string>"', f'File "{filename}"')
   if execution_timeout:
-    output += f"\n\n\nExecution timeout ({DOCKER_CONTAINER_EXECUTION_TIMEOUT} seconds)"
+    output += f"\n\n\nExecution timeout ({const.DOCKER_CONTAINER_EXECUTION_TIMEOUT} seconds)"
   output = output.strip()
   if not output:
     output = "strings.empty_output()"
@@ -135,18 +135,18 @@ print("User script finished: ",time())
   cmd = ["python3", "-c", python_code]
   report = f"Time before starting container: {starting_time}"
   container = client.containers.run(
-      image=DOCKER_DEFAULT_IMAGE,
+      image=const.DOCKER_DEFAULT_IMAGE,
       command=cmd,
       name=f"py-runner-time-test",
       detach=True,
-      mem_limit=f"{DOCKER_CONTAINER_MEMORY_LIMIT_MB}m",
+      mem_limit=f"{const.DOCKER_CONTAINER_MEMORY_LIMIT_MB}m",
       network_disabled=True,
       read_only=True
   )
   counter = 0
   step = 0.1
   while(container.status != "exited"):
-    if(counter > DOCKER_CONTAINER_EXECUTION_TIMEOUT):
+    if(counter > const.DOCKER_CONTAINER_EXECUTION_TIMEOUT):
       break
     await asyncio.sleep(step)
     counter += step
@@ -164,3 +164,7 @@ print("User script finished: ",time())
   else:
     report += "\nIf you changed output template for this test run, then it seems that you have not edited your regular expression properly to detect finish time of user's script"
   return report
+
+def init():
+  for version in const.PYTHON_VERSIONS:
+    prepare_image(f"python:{version}")
