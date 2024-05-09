@@ -5,22 +5,31 @@
     "lang_changed": "Language changed!",
     "py_version_changed": "Python version set to {version}",
     "welcome": "Welcome {username}! I'm a bot which can run non-interactive Python code for you (no input from user) and provide result with AI comment if it will fail with any exception.",
-    "lang_options": "Available languages:\n{lang_list}\nExample of changing language:\n/set_lang ru",
-    "python_versions": "Listed versions are the most recent in Ubuntu 20.04, 22.04 and 24.04 (3 latest LTS versions)\nAvailable Python versions:\n{version_list}\nExample of changing version:\n/set_python {latest}",
+    "lang_options": "Available languages (and their codes):\n{lang_list}\n\nExample of changing language:\n/set_lang ru",
+    "lang_not_available": "Language with code {lang_code} is not supported",
+    "python_versions": "You are using Python {user_version}.\n\nListed versions are the most recent in Ubuntu 20.04, 22.04 and 24.04 (3 latest LTS versions)\nAvailable Python versions:\n{version_list}\n\nExample of changing version:\n/set_python {latest}",
+    "version_not_available": "This version of Python is not provided",
     "code_exec_result": "Code execution result with Python {version}:\n",
     "ai_comment": "Comment from AI:",
-    "explain_prompt": "Please explain me error from the STDERR section. Be as coinsize as possible."
+    "explain_prompt": "Please explain me error from the STDERR section. Be as coinsize as possible.",
+    "usage_hint": "Bot usage manual\nCommands:\n/help - Show this guide\n/run - Start code execution. You can use it by passing code in same message or by replying with it to message with code. Provided just for group chats, in direct messages with bot no commands needed to run code\n/set_lang - Change the language locale\n/set_python - Switch python version\n\nLimitations:\n- Timeout for code execution is {timeout_seconds}\n- User input is not supported (meaning finctions like input and etc, which expect for any interaction with user). In case of usage such functions your code will just stuck waiting and finish with timeout\n- Your code won't have network access\n\nThese measures are taken to prevent possible abuse of resources and network."
   },
+
+
+  
   "ru": {
     "en_lang_name": "Английский",
     "ru_lang_name": "Русский",
     "lang_changed": "Язык изменен!",
     "py_version_changed": "Выбран Python версии {version}",
     "welcome": "Привет {username}! Я бот, который может запускать неинтерактивные python-скрипты (без пользовательского ввода через функцию input), предоставить результат выполнения кода и дать комментарий от ИИ в случае аварийного завершения программы.",
-    "lang_options": "Доступные языки:\n{lang_list}\nПример смены языка:\n/set_lang ru",
-    "python_versions": "Представленные версии Python являются последними доступными в трех последних LTS-выпусках Ubuntu (20.04, 22.04 and 24.04)\nДоступные версии Python:\n{version_list}\nПример переключения версии:\n/set_python {latest}",
+    "lang_options": "Доступные языки (и их код):\n{lang_list}\n\nПример смены языка:\n/set_lang en",
+    "lang_not_available": "Язык с кодом {lang_code} не поддерживается",
+    "python_versions": "Вы используете Python {user_version}.\n\nПредставленные версии Python являются последними доступными в трех последних LTS-выпусках Ubuntu (20.04, 22.04 and 24.04)\nДоступные версии Python:\n{version_list}\n\nПример переключения версии:\n/set_python {latest}",
+    "version_not_available": "Данная версия Python не предоставляется",
     "code_exec_result": "Результат выполнения кода с помощью Python {version}:\n",
     "ai_comment": "Комментарий от ИИ:",
-    "explain_prompt": "Пожалуйста объясни в чем причина ошибки из раздела STDERR. Пожалуйста, будь предельно точен."
+    "explain_prompt": "Пожалуйста объясни в чем причина ошибки из раздела STDERR. Пожалуйста, будь предельно точен.",
+    "usage_hint": "Инструкции по использованию бота\nКоманды:\n/help - Отобразить данную инструкцию\n/run - Команда используемая для выполнения кода. Можно использовать ее при ответе на сообщение с кодом, либо прописать код сразу после команды. Предоставляется для групповых чатов, при использовании бота напрямую (в лс) никакой команды для запуска кода не требуется\n/set_lang - Смена языка локализации\n/set_python - Смена версии Python\n\nОграничения:\n- Время выполнения кода ограничено {timeout_seconds}\n- Нет поддержки пользовательского ввода (функция input и т.д., ожидающие действий пользователя). При использовании таковых ваш код завершит исполнение по таймауту\n- Ваш код не будет иметь доступа в сеть\n\nДанные меры предприняты во избежание возможных злоупотреблений ресурсами и сетью."
   }
 }

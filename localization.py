@@ -15,10 +15,13 @@ def get(key, lang):
   return "undefined"
 
 
-def getLanguages(lang):
+def get_languages(lang):
   keys = list(strings.keys())
   langs = []
   for key in keys:
-    name = "- " + get([key+"_lang_name"], lang) + f"('{key}')"
+    name = "- " + get(key+"_lang_name", lang) + f"  ('{key}')"
     langs.append(name)
   return langs
+
+def get_lang_codes():
+  return list(strings.keys())
