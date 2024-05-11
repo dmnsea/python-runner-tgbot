@@ -1,8 +1,9 @@
+[tool.poetry]
 name = "python-runner-bot"
 version = "0.1.0"
-package-mode = false
 description = "Telegram bot to run Python code via docker containers"
-authors = ["https://github.com/NEK-RA", "https://github.com/"]
+# authors = ["Evgeny https://github.com/NEK-RA", "Ivan https://github.com/Brooklyn265t"]
+authors = ["Evgeny", "Ivan"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
