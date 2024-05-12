@@ -1,6 +1,6 @@
 import sqlite3
 
-from const import PYTHON_VERSIONS
+from .const import PYTHON_VERSIONS
 
 db = sqlite3.connect("bot.db")
 

@@ -10,9 +10,9 @@ from aiogram.types import Message
 import docker
 from requests import post
 
-import const
-import database as db
-import localization as lc
+from . import const
+from . import database as db
+from . import localization as lc
 
 client = docker.from_env()
 log = getLogger("docker_runner")

@@ -10,10 +10,10 @@ from aiogram.filters import CommandStart
 from aiogram.types.bot_command import BotCommand
 from aiogram.filters.command import Command
 
-import const
-import database as db
-import docker_runner
-import localization as lc
+from . import const
+from . import database as db
+from . import docker_runner
+from . import localization as lc
 
 exec_limit = asyncio.Semaphore(const.SIMULTANEOUS_EXEC)
 
@@ -171,9 +171,12 @@ async def main() -> None:
     # Сообщаем телеге какие команды у нас есть
     await bot.set_my_commands([СMD_START, CMD_RUN, CMD_HELP, CMD_SET_LANG, CMD_SET_PYTHON, CMD_TEST])
     await dp.start_polling(bot)
+    db.close()
 
 
-if __name__ == "__main__":
+def start():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())
-    db.close()
+
+if __name__ == "__main__":
+    start()
