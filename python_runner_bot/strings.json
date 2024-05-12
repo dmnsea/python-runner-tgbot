@@ -9,10 +9,17 @@
     "lang_not_available": "Language with code {lang_code} is not supported",
     "python_versions": "You are using Python {user_version}.\n\nListed versions are the most recent in Ubuntu 20.04, 22.04 and 24.04 (3 latest LTS versions)\nAvailable Python versions:\n{version_list}\n\nExample of changing version:\n/set_python {latest}",
     "version_not_available": "This version of Python is not provided",
+    "code_queued": "Code was added to execution queue",
+    "started_exec": "Execution started, result will be there after execution finish",
     "code_exec_result": "Code execution result with Python {version}:\n",
-    "ai_comment": "Comment from AI:",
+    "ai_comment": "Comment from AI:\n",
     "explain_prompt": "Please explain me error from the STDERR section. Be as coinsize as possible.",
-    "usage_hint": "Bot usage manual\nCommands:\n/help - Show this guide\n/run - Start code execution. You can use it by passing code in same message or by replying with it to message with code. Provided just for group chats, in direct messages with bot no commands needed to run code\n/set_lang - Change the language locale\n/set_python - Switch python version\n\nLimitations:\n- Timeout for code execution is {timeout_seconds}\n- User input is not supported (meaning finctions like input and etc, which expect for any interaction with user). In case of usage such functions your code will just stuck waiting and finish with timeout\n- Your code won't have network access\n\nThese measures are taken to prevent possible abuse of resources and network."
+    "waiting_ai": "Code finished with error, waiting AI comment for that",
+    "usage_hint": "Bot usage manual\nCommands:\n/help - Show this guide\n/run - Start code execution. You can use it by passing code in same message or by replying with it to message with code. Provided just for group chats, in direct messages with bot no commands needed to run code\n/set_lang - Change the language locale\n/set_python - Switch python version\n\nLimitations:\n- Timeout for code execution is {timeout_seconds}\n- User input is not supported (meaning finctions like input and etc, which expect for any interaction with user). In case of usage such functions your code will just stuck waiting and finish with timeout\n- Your code won't have network access\n\nThese measures are taken to prevent possible abuse of resources and network.",
+    "something_went_wrong": "Something went wrong",
+    "run_hint": "You need to provide your python code after /run command\n\nExample: /run print('Hello world')",
+    "empty_output": "Execution finished, but code produced no output",
+    "no_such_command": "There is no such command"
   },
 
 
@@ -27,9 +34,16 @@
     "lang_not_available": "Язык с кодом {lang_code} не поддерживается",
     "python_versions": "Вы используете Python {user_version}.\n\nПредставленные версии Python являются последними доступными в трех последних LTS-выпусках Ubuntu (20.04, 22.04 and 24.04)\nДоступные версии Python:\n{version_list}\n\nПример переключения версии:\n/set_python {latest}",
     "version_not_available": "Данная версия Python не предоставляется",
+    "code_queued": "Код добавлен в очередь на выполнение",
+    "started_exec": "Код выполняется, результат будет тут после завершения выполнения",
     "code_exec_result": "Результат выполнения кода с помощью Python {version}:\n",
-    "ai_comment": "Комментарий от ИИ:",
+    "ai_comment": "Комментарий от ИИ:\n",
     "explain_prompt": "Пожалуйста объясни в чем причина ошибки из раздела STDERR. Пожалуйста, будь предельно точен.",
-    "usage_hint": "Инструкции по использованию бота\nКоманды:\n/help - Отобразить данную инструкцию\n/run - Команда используемая для выполнения кода. Можно использовать ее при ответе на сообщение с кодом, либо прописать код сразу после команды. Предоставляется для групповых чатов, при использовании бота напрямую (в лс) никакой команды для запуска кода не требуется\n/set_lang - Смена языка локализации\n/set_python - Смена версии Python\n\nОграничения:\n- Время выполнения кода ограничено {timeout_seconds}\n- Нет поддержки пользовательского ввода (функция input и т.д., ожидающие действий пользователя). При использовании таковых ваш код завершит исполнение по таймауту\n- Ваш код не будет иметь доступа в сеть\n\nДанные меры предприняты во избежание возможных злоупотреблений ресурсами и сетью."
+    "waiting_ai": "Код завершился с ошибкой, ожидается комментарий от ИИ",
+    "usage_hint": "Инструкции по использованию бота\nКоманды:\n/help - Отобразить данную инструкцию\n/run - Команда используемая для выполнения кода. Можно использовать ее при ответе на сообщение с кодом, либо прописать код сразу после команды. Предоставляется для групповых чатов, при использовании бота напрямую (в лс) никакой команды для запуска кода не требуется\n/set_lang - Смена языка локализации\n/set_python - Смена версии Python\n\nОграничения:\n- Время выполнения кода ограничено {timeout_seconds}\n- Нет поддержки пользовательского ввода (функция input и т.д., ожидающие действий пользователя). При использовании таковых ваш код завершит исполнение по таймауту\n- Ваш код не будет иметь доступа в сеть\n\nДанные меры предприняты во избежание возможных злоупотреблений ресурсами и сетью.",
+    "something_went_wrong": "Что-то пошло не так",
+    "run_hint": "Вам необходимо прописать код после команды /run\n\nПример: /run print('Привет мир')",
+    "empty_output": "Выполнение завершено, но код не произвел никакого вывода",
+    "no_such_command": "Такой команды нет"
   }
 }

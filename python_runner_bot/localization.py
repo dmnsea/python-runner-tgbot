@@ -12,7 +12,7 @@ with open("strings.json", "r") as f:
 def get(key, lang):
   if key in strings[lang]:
     return strings[lang][key]
-  return "undefined"
+  return f"{key} not found among [{list(strings[lang].keys())}]"
 
 
 def get_languages(lang):

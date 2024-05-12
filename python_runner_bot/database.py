@@ -1,31 +1,26 @@
-# user_id = message.from_user.id
-# user_lang = "ru" if message.from_user.language_code == "ru" else "en"
-# db.add_user(user_id, user_lang)
-
 import sqlite3
 
-db = sqlite3.connect("bot.db")
+from const import PYTHON_VERSIONS
 
+db = sqlite3.connect("bot.db")
 
 def prepare_db():
   cursor = db.cursor()
   cursor.execute(
-      'CREATE TABLE IF NOT EXISTS users (telegram_id INTEGER PRIMARY KEY, lang, python DEFAULT "3.12.3")'
+    f'CREATE TABLE IF NOT EXISTS users (telegram_id INTEGER PRIMARY KEY, lang TEXT, python TEXT DEFAULT "{PYTHON_VERSIONS[-1]}")'
   )
   db.commit()
 
 
 def add_user(tgid, lang):
   cursor = db.cursor()
-  cursor.execute("INSERT INTO users (telegram_id, lang) VALUES (?, ?)",
-                 (tgid, lang))
+  cursor.execute("INSERT INTO users (telegram_id, lang) VALUES (?, ?)", [tgid, lang])
   db.commit()
 
 
 def find_user(tgid):
   cursor = db.cursor()
-  result = cursor.execute('SELECT * FROM users WHERE telegram_id = ?',
-                          (tgid, ))
+  result = cursor.execute('SELECT * FROM users WHERE telegram_id = ?', [tgid])
   row = result.fetchone()
   if row:
     user = dict(telegram_id=row[0], lang=row[1], python=row[2])
@@ -35,15 +30,13 @@ def find_user(tgid):
 
 def update_lang(tgid, lang):
   cursor = db.cursor()
-  cursor.execute("UPDATE users SET lang = ? WHERE telegram_id = ?",
-                 (lang, tgid))
+  cursor.execute("UPDATE users SET lang = ? WHERE telegram_id = ?", [lang, tgid])
   db.commit()
 
 
 def update_python(tgid, version):
   cursor = db.cursor()
-  cursor.execute("UPDATE users SET python = ? WHERE telegram_id = ?",
-                 (version, tgid))
+  cursor.execute("UPDATE users SET python = ? WHERE telegram_id = ?", [version, tgid])
   db.commit()
 
 
@@ -67,8 +60,11 @@ def get_user_python(tgid):
   user = find_user(tgid)
   if user:
     return user["python"]
-  return None
+  return PYTHON_VERSIONS[-1]
+  
 
+def close():
+  db.close()
 
 if __name__ == "__main__":
   all_users()
