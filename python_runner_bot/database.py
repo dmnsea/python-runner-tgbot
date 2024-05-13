@@ -1,9 +1,10 @@
+from pathlib import Path
 import sqlite3
 
-from .const import PYTHON_VERSIONS
+from . import const
 
 #: Открытие БД для дальнейшей работы с ней
-db = sqlite3.connect("bot.db")
+db: sqlite3.Connection = None
 
 def prepare_db():
   """
@@ -15,9 +16,12 @@ def prepare_db():
 
   - `python` (используемая версия, по умолчанию - берется значение из модуля с константами)
   """
+  global db
+  db_file = Path(const.BASE_DIR).joinpath("bot.db")
+  db = sqlite3.connect(db_file)
   cursor = db.cursor()
   cursor.execute(
-    f'CREATE TABLE IF NOT EXISTS users (telegram_id INTEGER PRIMARY KEY, lang TEXT, python TEXT DEFAULT "{PYTHON_VERSIONS[-1]}")'
+    f'CREATE TABLE IF NOT EXISTS users (telegram_id INTEGER PRIMARY KEY, lang TEXT, python TEXT DEFAULT "{const.PYTHON_VERSIONS[-1]}")'
   )
   db.commit()
 
@@ -33,6 +37,7 @@ def add_user(tgid, lang):
     :type lang: str
 
   """
+  global db
   cursor = db.cursor()
   cursor.execute("INSERT INTO users (telegram_id, lang) VALUES (?, ?)", [tgid, lang])
   db.commit()
@@ -48,6 +53,7 @@ def find_user(tgid):
     :return: Словарь со всеми столбцами записи из БД
     :rtype: dict[telegram_id, lang, python] или None
   """
+  global db
   cursor = db.cursor()
   result = cursor.execute('SELECT * FROM users WHERE telegram_id = ?', [tgid])
   row = result.fetchone()
@@ -68,6 +74,7 @@ def update_lang(tgid, lang):
     :type lang: str
 
   """
+  global db
   cursor = db.cursor()
   cursor.execute("UPDATE users SET lang = ? WHERE telegram_id = ?", [lang, tgid])
   db.commit()
@@ -84,6 +91,7 @@ def update_python(tgid, version):
     :type lang: str
 
   """
+  global db
   cursor = db.cursor()
   cursor.execute("UPDATE users SET python = ? WHERE telegram_id = ?", [version, tgid])
   db.commit()
@@ -93,6 +101,7 @@ def all_users():
   """
     Отображение списка пользователей при выполнении модуля напрямую
   """
+  global db
   print("All users in db are:")
   cursor = db.cursor()
   rows = cursor.execute("SELECT * FROM users").fetchall()
@@ -130,13 +139,14 @@ def get_user_python(tgid):
   user = find_user(tgid)
   if user:
     return user["python"]
-  return PYTHON_VERSIONS[-1]
+  return const.PYTHON_VERSIONS[-1]
   
 
 def close():
   """
     Закрытие соединения с базой данных
   """
+  global db
   db.close()
 
 if __name__ == "__main__":
