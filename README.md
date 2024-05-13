@@ -63,8 +63,16 @@ python -m python_runner_bot
 
 Системные зависимости:
 - [Python v3.9+](https://www.python.org/downloads/) (может заработать на более ранних версиях 3.x, однако разрабатывался с использованием версий 3.9 и 3.12)
-- [Poetry](https://python-poetry.org/docs/#installation)
-- [Docker](https://docs.docker.com/get-docker/)
+- [Poetry](https://python-poetry.org/docs/#installation) (управление зависимостями, управление виртуальным окружением, сборка проекта)
+- [Docker](https://docs.docker.com/get-docker/) (запуск пользовательского кода)
+- make (сборка документации с помощью sphinx)
+
+Зависимости проекта:
+- [aiogram](https://pypi.org/project/aiogram/) - асинхронный фреймворк для работы с Telegram Bot API
+- [python-dotenv](https://pypi.org/project/python-dotenv/) - библиотека для чтения `.env` и добавления его переменных к переменным окружения
+- [docker](https://pypi.org/project/docker/) - библиотека для взаимодействия с Docker Engine API
+- [requests](https://pypi.org/project/requests/) - библиотека для выполнения HTTP-запросов
+- [sphinx](https://pypi.org/project/Sphinx/) - генератор документации для Python-проектов
 
 Склонируйте репозиторий:
 ```bash
