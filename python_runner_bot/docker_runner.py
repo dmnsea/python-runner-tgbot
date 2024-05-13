@@ -2,7 +2,6 @@ import asyncio
 from json import dumps
 from logging import getLogger
 from time import time
-from typing import Callable, Coroutine
 import re
 
 from aiogram.types import Message
@@ -14,7 +13,9 @@ from . import const
 from . import database as db
 from . import localization as lc
 
+#: Объект для взаимодействия с Docker Engine
 client = docker.from_env()
+#: Объект для логгирования
 log = getLogger("docker_runner")
 
 #############################################
@@ -22,11 +23,13 @@ log = getLogger("docker_runner")
 #############################################
 
 def prepare_image(target: str = const.DEFAULT_IMAGE) -> None:
-  global client
-  f"""Function to prepare necessary docker image for futher work of bot.
-
-  1. target (str, optional): Target image in next format: "image_tag:version_tag". Defaults to DEFAULT_IMAGE.
   """
+    Подготовка указанного образа Docker - поиск среди уже загруженных и загрузка при отсутствии такового.
+
+    :param target: Наименование требуемого образа
+    :type target: str
+  """
+  global client
   found = False
   log.info(f"Checking for '{target}' image availability")
   for image in client.images.list():
@@ -47,18 +50,29 @@ def prepare_image(target: str = const.DEFAULT_IMAGE) -> None:
 
 async def run_container(cmd: str, lang: str, user_id: int, target: str = const.DEFAULT_IMAGE) -> str:
   global client
-  """Function to run specified offline container with specified command.
+  """
+    Функция для запуска Docker контейнера с указанной командой на базе указанного образа, а также получения результатов выполнения.
 
-  1. cmd (str): Command for the container. For running python code it's f'python -c "{code_to_run}"'.
-  2. id (int): supposed to be telegram id or chat id, used to make unique container name (which will also include timestamp in name)
-  2. target (str, optional): Target image in next format: "image_tag:version_tag". Defaults to DEFAULT_IMAGE.
+    :param cmd: Строкое представление списка элементов команды
+    :type cmd: str
 
-  Hardcoded container parameters:
-  - name=py-runner-id-timestamp
-  - detach=True - container starts detached, this way exclude ContainerError exception, when some exception raised inside container and it's finishing with non-zero code
-  - mem_limit=CONTAINER_MEMORY_LIMIT_MB - value from constants file. Limits the 
-  - network_disabled=True - preventing network abuse
-  - read_only=True - preventing "rm -rf /" and others
+    :param lang: Код предпочитаемой пользователем локализации
+    :type lang: str
+
+    :param user_id: Идентификатор пользователя, используемый в логах и названии контейннера
+    :type user_id: int
+
+    :param target: Требуемый Docker-образ, по умолчанию - значение из модуля констант
+    :type target: str
+
+    :return: Результат работы контейнера (логи потоков вывода и ошибок)
+    :rtype: str
+
+    Неизменяемые параметры запускаемых контейнеров:
+    - detach=True - запуск контейнера в фоновом режиме. Предотвращает исключение типа ContainerError в случае если запусщенный в контейнере процесс завершился с ненулевым кодом.
+    - mem_limit=CONTAINER_MEMORY_LIMIT_MB - ограничение по памяти, используется соответствующее значение из модуля констант
+    - network_disabled=True - отключение сетевого доступа во избежание потенциальных нарушений условий сервиса, где запущен бот (исключение загрузки или отправки каких-то потенциально вредоносных данных, исключение сканирования сетей и т.д.)
+    - read_only=True - минимизация влияния пользовательского кода на среду в контейнере (редактирование файлов системы базового образа, "снос" системы и т.д.)
   """
   container_name = f"code_{user_id}_{time()}"
   log.info(f"Running code for {user_id} with {target} image: {container_name}")
@@ -111,6 +125,18 @@ async def run_container(cmd: str, lang: str, user_id: int, target: str = const.D
 
 # code: str, edit_func: Callable, inline: int = None
 async def run_python_code(code: str, msg: Message, user_id: int):
+  """
+    Формирование команды на запуск Python кода в контейнере с использованием предпочитаемой пользователем версии Python (образа). Запуск и ожидание результатов работы контейнера. В процессе работы запрашивает комментарий от ИИ при наличии чего-либо в потоке ошибок (STDERR) и редактирует сообщение, указывая этап выполнения (начато выполнение, получен результат, запрос комментария ИИ при ошибке, отправка итогового результата пользователю)
+
+    :param code: Текст, трактуемый как код на языке Python
+    :type code: str
+
+    :param msg: Объект сообщения с необходимой для редактирования текста сообщения информацией и методом
+    :type msg: aiogram.types.Message
+
+    :param user_id: Идентификатор пользователя, используемый для получения настроек пользователя и использования в функции запуска контейнера
+    :type user_id: int
+  """
   try:
     lang = db.get_user_lang(user_id)
     python_version = db.get_user_python(user_id)
@@ -142,7 +168,10 @@ async def run_python_code(code: str, msg: Message, user_id: int):
 
 async def test_run():
   """
-  Some kind of benchmarking function. Made to measure overheads of running, stopping and removing container
+    Функция для проведения тестового прогона с замерами времени между запуском контейнера и запуском кода, а также между завершением работы кода и удалением контейнера.
+
+    :return: Сообщение с временными метками и расчитанным временем оверхеда
+    :rtype: str
   """
   starting_time = time()
   sleep_time=3
@@ -190,13 +219,32 @@ print("User script finished: ",time())
     report += "\nIf you changed output template for this test run, then it seems that you have not edited your regular expression properly to detect finish time of user's script"
   return report
 
+
 def init():
+  """
+    Подготовка всех образов с версиями Python, перечисленными в модуле констант
+  """
   log.info("Preparing images")
   for version in const.PYTHON_VERSIONS:
     prepare_image(f"python:{version}")
 
 
 def ai_explain(execution_result, lang, python_version) -> str:
+  """
+    Запрос комментария от ИИ. Работает на основе публичного API из открытых источников.
+
+    :param execution_result: Результат выполнения
+    :type execution_result: str
+
+    :param lang: Код используемой локализации
+    :type lang: str
+
+    :param python_version: Используемая версия Python
+    :type python_version: str
+
+    :return: Ответ от ИИ
+    :rtype: str
+  """
   url = "https://nexra.aryahcr.cc/api/chat/gpt"
   headers = {"Content-Type": "application/json"}
   data = {
