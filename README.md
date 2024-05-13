@@ -15,8 +15,49 @@
 - [x] Задокументировать код с помощью Sphinx
 - [x] Дописать инструкции по сборке и развертыванию
 
+## Сборка
+
+В репозитории расположен скрипт `build.sh`, который последовательно проводит:
+- установку зависимостей с помощью Poetry
+- сборку дистрибутивов sdist и wheel
+- сборку документации
+- сборку образа Docker
+
+Запустить процесс можно следующим образом:
+
+```bash
+chmod +x build.sh
+./build.sh
+```
 
 ## Развертывание и запуск
+
+### С помощью Docker
+
+Соберите образ:
+```bash
+docker build -t python_runner_bot .
+```
+
+Запустите контейнер на базе собранного образа:
+```bash
+docker run -d --name bot_container\
+    -v /var/run/docker.sock:/var/run/docker.sock\
+    -v $(pwd)/bot.db:/bot/python_runner_bot/bot.db\
+    python_runner_bot
+```
+
+### Из wheel дистрибутива
+
+Установка из wheel дистрибутива производится следующим образом:
+```bash
+pip install python_runner_bot-0.1.0.whl
+```
+
+Последующий запуск:
+```bash
+python -m python_runner_bot
+```
 
 ### Из исходного кода:
 
