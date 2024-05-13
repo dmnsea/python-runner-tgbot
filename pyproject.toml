@@ -5,6 +5,9 @@ description = "Telegram bot to run Python code via docker containers"
 # authors = ["Evgeny https://github.com/NEK-RA", "Ivan https://github.com/Brooklyn265t"]
 authors = ["Evgeny", "Ivan"]
 readme = "README.md"
+include = [
+    { path = "strings.json", format = ["sdist", "wheel"] }
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
