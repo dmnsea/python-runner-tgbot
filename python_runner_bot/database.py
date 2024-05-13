@@ -3,8 +3,16 @@ import sqlite3
 
 from . import const
 
-#: Открытие БД для дальнейшей работы с ней
-db: sqlite3.Connection = None
+def get_connection():
+  """
+    Получение объекта соединения для использования в остальных функциях
+
+    :return: Объект соединения
+    :rtype: sqlite3.Connection
+  """
+  db_file = Path(const.BASE_DIR).joinpath("bot.db")
+  db = sqlite3.connect(db_file)
+  return db
 
 def prepare_db():
   """
@@ -16,14 +24,13 @@ def prepare_db():
 
   - `python` (используемая версия, по умолчанию - берется значение из модуля с константами)
   """
-  global db
-  db_file = Path(const.BASE_DIR).joinpath("bot.db")
-  db = sqlite3.connect(db_file)
+  db = get_connection()
   cursor = db.cursor()
   cursor.execute(
     f'CREATE TABLE IF NOT EXISTS users (telegram_id INTEGER PRIMARY KEY, lang TEXT, python TEXT DEFAULT "{const.PYTHON_VERSIONS[-1]}")'
   )
   db.commit()
+  db.close()
 
 
 def add_user(tgid, lang):
@@ -37,10 +44,11 @@ def add_user(tgid, lang):
     :type lang: str
 
   """
-  global db
+  db = get_connection()
   cursor = db.cursor()
   cursor.execute("INSERT INTO users (telegram_id, lang) VALUES (?, ?)", [tgid, lang])
   db.commit()
+  db.close()
 
 
 def find_user(tgid):
@@ -53,13 +61,14 @@ def find_user(tgid):
     :return: Словарь со всеми столбцами записи из БД
     :rtype: dict[telegram_id, lang, python] или None
   """
-  global db
+  db = get_connection()
   cursor = db.cursor()
   result = cursor.execute('SELECT * FROM users WHERE telegram_id = ?', [tgid])
   row = result.fetchone()
   if row:
     user = dict(telegram_id=row[0], lang=row[1], python=row[2])
     return user
+  db.close()
   return None
 
 
@@ -74,10 +83,11 @@ def update_lang(tgid, lang):
     :type lang: str
 
   """
-  global db
+  db = get_connection()
   cursor = db.cursor()
   cursor.execute("UPDATE users SET lang = ? WHERE telegram_id = ?", [lang, tgid])
   db.commit()
+  db.close()
 
 
 def update_python(tgid, version):
@@ -91,23 +101,25 @@ def update_python(tgid, version):
     :type lang: str
 
   """
-  global db
+  db = get_connection()
   cursor = db.cursor()
   cursor.execute("UPDATE users SET python = ? WHERE telegram_id = ?", [version, tgid])
   db.commit()
+  db.close()
 
 
 def all_users():
   """
     Отображение списка пользователей при выполнении модуля напрямую
   """
-  global db
+  db = get_connection()
   print("All users in db are:")
   cursor = db.cursor()
   rows = cursor.execute("SELECT * FROM users").fetchall()
   users = list(map(lambda r: dict(id=r[0], lang=r[1], python=r[2]), rows))
   for user in users:
     print(user)
+  db.close()
 
 
 def get_user_lang(tgid):
@@ -140,14 +152,7 @@ def get_user_python(tgid):
   if user:
     return user["python"]
   return const.PYTHON_VERSIONS[-1]
-  
 
-def close():
-  """
-    Закрытие соединения с базой данных
-  """
-  global db
-  db.close()
 
 if __name__ == "__main__":
   all_users()
