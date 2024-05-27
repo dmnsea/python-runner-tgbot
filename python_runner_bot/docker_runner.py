@@ -157,7 +157,6 @@ async def run_python_code(code: str, msg: Message, user_id: int):
       explanation = ai_explain(output, lang, python_version)
       output += "\n\n\n" + lc.get("ai_comment", lang) + explanation
     await msg.edit_text(output)
-    db.close()
     log.info(f"Finished processing code for user:{user_id}")
   except Exception as e:
     print("Exception:", e)
