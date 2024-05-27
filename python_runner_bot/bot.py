@@ -179,7 +179,14 @@ async def process_code_message(message: types.Message) -> None:
             await docker_runner.run_python_code(code=code, msg=reply, user_id=message.from_user.id)
     else:
         if message.text.startswith("/run"):
-            await message.reply(lc.get("run_hint", lang))
+            if message.reply_to_message:
+                code = extract_code(message.reply_to_message)
+                # reply = await message.reply(lc.get("code_queued", lang))
+                reply = await message.reply_to_message.reply(lc.get("code_queued", lang))
+                async with exec_limit:
+                    await docker_runner.run_python_code(code=code, msg=reply, user_id=message.from_user.id)
+            else:
+                await message.reply(lc.get("run_hint", lang))
         elif message.text.startswith("/"):
             await message.reply(lc.get("no_such_command", lang))
         else:
@@ -253,7 +260,6 @@ async def main() -> None:
     # Сообщаем телеге какие команды у нас есть
     await bot.set_my_commands([СMD_START, CMD_RUN, CMD_HELP, CMD_SET_LANG, CMD_SET_PYTHON, CMD_TEST])
     await dp.start_polling(bot)
-    db.close()
 
 
 def start():

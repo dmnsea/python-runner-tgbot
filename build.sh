@@ -19,6 +19,7 @@ cd docs && make html
 cd $ROOT
 echo "\tСБОРКА ДОКУМЕНТАЦИИ ЗАВЕРШЕНА"
 echo "Документация расположена в папке: docs/build/html"
+echo "\n\n\n"
 
 echo "\tСБОРКА DOCKER-ОБРАЗА"
 if [ -f /usr/bin/docker ]
