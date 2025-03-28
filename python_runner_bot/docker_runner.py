@@ -259,7 +259,19 @@ def ai_explain(execution_result, lang, python_version) -> str:
   try:
     response = post(url, headers=headers, data=dumps(data))
     if response.status_code == 200:
-      return response.json()["gpt"]
+      response = response.json()
+      id = response.get("id")
+      waiting = True
+      while (waiting):
+        response = get("https://nexra.aryahcr.cc/api/chat/task/" + id)
+        if response.status_code == 200:
+          response = response.json()
+          if response.get("status") != "pending":
+            waiting = False
+            return response.get("gpt") if response.get("status") == "completed" else dumps(response)
+        else:
+          waiting = False
+          return f"Error: {response.status_code}"
     else:
       return f"Error: {response.status_code}"
   except Exception as e:
